@@ -1,0 +1,713 @@
+/* Estilo general para el body */
+body {
+    font-family: Arial, sans-serif; /* Establece la fuente principal de la página */
+    background-color: #d9a875; /* Color de fondo para el body */
+    display: flex; /* Usamos flexbox para centrar los elementos */
+    justify-content: center; /* Centra el contenido horizontalmente */
+    align-items: center; /* Centra el contenido verticalmente */
+    height: 100vh; /* Hace que el body ocupe el 100% de la altura de la ventana */
+    margin: 0; /* Elimina el margen predeterminado */
+}
+
+/* Contenedor principal */
+.container {
+    text-align: center; /* Centra el texto dentro del contenedor */
+    background-color: #8A5021; /* Color de fondo del contenedor */
+    width: 88%; /* Establece el ancho del contenedor al 88% de la pantalla */
+    padding-left: 5%; /* Relleno (padding) a la izquierda */
+    padding-right: 5%; /* Relleno (padding) a la derecha */
+    padding-top: 3%; /* Relleno (padding) en la parte superior */
+    padding-bottom: 7%; /* Relleno (padding) en la parte inferior */
+    border-radius: 12px; /* Bordes redondeados con un radio de 12px */
+    position: relative; /* Permite posicionar elementos de manera relativa dentro del contenedor */
+}
+
+/* Estilo para el contenedor de historial */
+.containerHistorial {
+    font-family: 'Sancreek'; /* Fuente personalizada para el contenedor de historial */
+    text-align: center; /* Centra el texto dentro del contenedor */
+    background-color: #8A5021; /* Color de fondo del contenedor */
+    width: 88%; /* Establece el ancho del contenedor al 88% de la pantalla */
+    height: 100vh; /* Establece la altura del contenedor al 100% de la ventana */
+    padding-left: 5%; /* Relleno (padding) a la izquierda */
+    padding-right: 5%; /* Relleno (padding) a la derecha */
+    padding-top: 3%; /* Relleno (padding) en la parte superior */
+    padding-bottom: 7%; /* Relleno (padding) en la parte inferior */
+    border-radius: 12px; /* Bordes redondeados con un radio de 12px */
+    position: relative; /* Permite posicionar elementos de manera relativa dentro del contenedor */
+    overflow-y: auto; /* Permite el desplazamiento vertical si el contenido excede la altura del contenedor */
+}
+
+
+/* Estilo para el contenedor 2 */
+.container2 {
+    text-align: center; /* Centra el texto dentro del contenedor */
+    background-image: url('./img/fondo.jpg'); /* Asegúrate de usar la ruta correcta para la imagen de fondo */
+    background-size: 100%; /* Ajusta el tamaño de la imagen al 100% del contenedor */
+    background-position: center; /* Centra la imagen en el contenedor */
+    background-repeat: no-repeat; /* Evita que la imagen se repita si es más pequeña que el contenedor */
+    width: 88%; /* Establece el ancho del contenedor al 88% de la pantalla */
+    padding-left: 5%; /* Relleno (padding) a la izquierda */
+    padding-right: 5%; /* Relleno (padding) a la derecha */
+    padding-top: 2%; /* Relleno (padding) en la parte superior */
+    padding-bottom: 7%; /* Relleno (padding) en la parte inferior */
+    border-radius: 12px; /* Bordes redondeados con un radio de 12px */
+    position: relative; /* Permite posicionar elementos de manera relativa dentro del contenedor */
+}
+
+/* Estilo para el contenedor 3 */
+.container3 {
+    text-align: center; /* Centra el texto dentro del contenedor */
+    background-image: url('./img/fondo.jpg'); /* Asegúrate de usar la ruta correcta para la imagen de fondo */
+    background-size: 100%; /* Ajusta el tamaño de la imagen al 100% del contenedor */
+    background-position: center; /* Centra la imagen en el contenedor */
+    background-repeat: no-repeat; /* Evita que la imagen se repita si es más pequeña que el contenedor */
+    background-position-y: 600px; /* Desplaza la imagen hacia abajo 600px */
+    width: 88%; /* Establece el ancho del contenedor al 88% de la pantalla */
+    padding-left: 5%; /* Relleno (padding) a la izquierda */
+    padding-right: 5%; /* Relleno (padding) a la derecha */
+    padding-top: 40%; /* Relleno (padding) superior del 40% para mover el contenido hacia abajo */
+    padding-bottom: 7%; /* Relleno (padding) en la parte inferior */
+    border-radius: 12px; /* Bordes redondeados con un radio de 12px */
+    position: relative; /* Permite posicionar elementos de manera relativa dentro del contenedor */
+}
+
+/* Estilo para el contenedor 4 */
+.container4 {
+    text-align: center; /* Centra el texto dentro del contenedor */
+    background-image: url('./img/fondo.jpg'); /* Asegúrate de usar la ruta correcta para la imagen de fondo */
+    background-size: 100%; /* Ajusta el tamaño de la imagen al 100% del contenedor */
+    background-position: center; /* Centra la imagen en el contenedor */
+    background-repeat: no-repeat; /* Evita que la imagen se repita si es más pequeña que el contenedor */
+    background-position-y: 30px; /* Desplaza la imagen hacia abajo 30px */
+    width: 88%; /* Establece el ancho del contenedor al 88% de la pantalla */
+    padding-left: 5%; /* Relleno (padding) a la izquierda */
+    padding-right: 5%; /* Relleno (padding) a la derecha */
+    border-radius: 12px; /* Bordes redondeados con un radio de 12px */
+    position: relative; /* Permite posicionar elementos de manera relativa dentro del contenedor */
+}
+
+
+.button-container {
+    display: flex; /* Utiliza flexbox para alinear los botones */
+    gap: 10px; /* Espacio entre los botones */
+    justify-content: center; /* Centra los botones horizontalmente */
+    margin-top: 20px; /* Espacio superior opcional */
+}
+/* clase para el logo arriba a la derecha */
+.superpuesta {
+    position: absolute; /* Permite que la imagen se superponga */
+    top: 0; /* Ajusta la distancia desde la parte superior */
+    right: 0; /* Ajusta la distancia desde la derecha */
+    width: 150px; /* Ajusta el tamaño de la imagen según sea necesario */
+    height: auto; /* Mantiene la proporción de la imagen */
+    z-index: 10; /* Asegura que la imagen esté por encima del contenedor */
+}
+
+/* Estilo para el encabezado principal (h1) */
+h1 {
+    font-size: 40px; /* Tamaño de fuente grande */
+    font-weight: bold; /* Pone el texto en negrita */
+    color: #fff; /* Color de texto blanco */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); /* Sombra suave al texto para darle un efecto de relieve */
+    font-family: 'Arial Black', sans-serif; /* Fuente en negrita tipo 'Arial Black' */
+    margin-bottom: 30px; /* Espacio debajo del encabezado */
+}
+
+/* Estilo para el encabezado en la clase 'h1salon2' */
+.h1salon2 {
+    font-size: 40px; /* Tamaño de fuente igual al encabezado h1 */
+    font-weight: bold; /* Pone el texto en negrita */
+    color: #fff; /* Color de texto blanco */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); /* Sombra suave al texto */
+    margin-bottom: 30px; /* Espacio debajo del encabezado */
+    margin-top: 60px; /* Espacio adicional en la parte superior */
+}
+
+/* Estilo para la sección de las salas (room-sections) */
+.room-sections {
+    display: flex; /* Utiliza Flexbox para la disposición */
+    justify-content: center; /* Centra las secciones horizontalmente */
+    gap: 40px; /* Espacio entre cada categoría de sala */
+    margin-top: 20px; /* Espacio superior entre las secciones */
+}
+
+/* Estilo para cada categoría de sala (room-category) */
+.room-category {
+    display: flex; /* Utiliza Flexbox */
+    flex-direction: column; /* Organiza los elementos en columna */
+    align-items: center; /* Centra los elementos dentro de la categoría */
+    background-color: #a67c52; /* Color de fondo marrón claro */
+    padding: 20px; /* Relleno interno alrededor del contenido */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave para darle un efecto elevado */
+    width: 33.33%; /* Ancho de cada categoría ocupa el 33.33% del contenedor */
+    padding-top: 5%; /* Relleno en la parte superior */
+    padding-bottom: 5%; /* Relleno en la parte inferior */
+}
+
+/* Estilo para las imágenes dentro de la categoría de sala */
+.room-category img {
+    width: 80px; /* Tamaño fijo para las imágenes */
+    margin-bottom: 15px; /* Espacio debajo de la imagen */
+}
+
+
+/* Estilo para el contenedor de botones */
+.buttons {
+    display: flex; /* Utiliza Flexbox para alinear los botones en fila */
+    gap: 5px; /* Espacio entre los botones */
+    margin-top: 10px; /* Espacio superior entre el contenedor de botones y otros elementos */
+}
+
+/* Estilo general para los botones */
+button {
+    padding: 10px 20px; /* Relleno interno en el botón */
+    border-radius: 5px; /* Bordes redondeados */
+    border: none; /* Sin borde */
+    background-color: transparent; /* Fondo transparente por defecto */
+    color: #3b2c24; /* Color del texto */
+    font-weight: bold; /* Pone el texto en negrita */
+    font-size: 14px; /* Tamaño de la fuente */
+    cursor: pointer; /* Cambia el cursor a un puntero para indicar que es clickeable */
+    transition: background-color 0.3s; /* Transición suave para el cambio de color de fondo */
+}
+
+/* Estilo específico para el botón de logout */
+.logout-button {
+    margin-top: 15px; /* Espacio superior para separar el botón de logout */
+    padding: 10px 20px; /* Relleno interno en el botón */
+    border-radius: 5px; /* Bordes redondeados */
+    border: none; /* Sin borde */
+    background-color: #b89a7e; /* Color de fondo marrón para el botón */
+    color: #3b2c24; /* Color del texto */
+    font-weight: bold; /* Pone el texto en negrita */
+    font-size: 16px; /* Tamaño de la fuente más grande */
+    cursor: pointer; /* Cambia el cursor a un puntero */
+}
+
+/* Estilo para el encabezado h1 */
+h1 {
+    font-family: 'Sancreek'; /* Fuente personalizada para el encabezado */
+}
+
+/* Estilo para el estado hover (cuando el cursor pasa por encima) del botón de logout */
+.logout-button:hover {
+    background-color: #9e8a6e; /* Cambia el color de fondo cuando el botón es hoverizado */
+}
+
+
+/* Estilos básicos para las imágenes de números */
+.nums {
+    width: 50px; /* Ancho de las imágenes */
+    height: 50px; /* Alto de las imágenes */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transiciones suaves para el efecto de hover */
+}
+
+/* Efecto de hover para las imágenes de números */
+.nums:hover {
+    transform: scale(1.2); /* Agranda la imagen al pasar el cursor por encima */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); /* Agrega una sombra cuando se hace hover */
+    cursor: pointer; /* Cambia el cursor a un puntero indicando que es clickeable */
+}
+
+/* Estilo para el contenedor de la información de la mesa */
+.mesa-info {
+    background-color: #8A5021; /* Color de fondo marrón */
+    padding: 10px; /* Relleno interno */
+    border-radius: 8px; /* Bordes redondeados */
+    color: white; /* Color del texto blanco */
+    width: fit-content; /* El contenedor se ajusta al tamaño del contenido */
+    margin: 10px auto; /* Centra el contenedor horizontalmente con margen */
+    text-align: center; /* Centra el contenido dentro del contenedor */
+}
+
+/* Contenedor de varias mesas de información */
+.mesa-info-container {
+    display: flex; /* Utiliza Flexbox para alinear los elementos */
+    flex-wrap: wrap; /* Permite que los elementos se acomoden en varias filas si es necesario */
+    gap: 10px; /* Espacio entre los recuadros de información */
+    justify-content: center; /* Centra los recuadros dentro del contenedor */
+}
+
+/* Estilo para la información de mesa en un formato reducido */
+.mesa-info2 {
+    width: 40%; /* Ancho del recuadro en el 40% del contenedor */
+    margin-bottom: 10px; /* Espacio en la parte inferior */
+    background-color: #8A5021; /* Mismo fondo marrón */
+    padding: 10px; /* Relleno interno */
+    border-radius: 8px; /* Bordes redondeados */
+    color: white; /* Color de texto blanco */
+    text-align: center; /* Centra el texto dentro del recuadro */
+}
+
+/* Estilo para las mesas (con fondo marrón y sombra) */
+.table {
+    background-color: #a67c52; /* Fondo marrón claro */
+    padding: 10px; /* Relleno interno */
+    border-radius: 8px; /* Bordes redondeados */
+    text-align: center; /* Centra el contenido */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra suave para un efecto elevado */
+    width: 90%; /* El ancho es el 90% del contenedor */
+    transition: transform 0.3s; /* Transición para los efectos de transformación */
+}
+
+/* Estilo de la tabla con fondo marrón, similar al de la clase .table */
+.tabla {
+    background-color: #a67c52; /* Fondo marrón claro */
+    padding: 10px; /* Relleno interno */
+    border-radius: 8px; /* Bordes redondeados */
+    text-align: center; /* Centra el texto dentro del contenedor */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra suave */
+    width: 90%; /* Ancho del contenedor */
+}
+
+/* Estilo para las imágenes dentro de las mesas */
+.table img {
+    width: 20%; /* Ancho fijo del 20% */
+    height: auto; /* Altura automática para mantener la proporción de la imagen */
+    margin-bottom: 10px; /* Espacio debajo de la imagen */
+    border-radius: 4px; /* Bordes redondeados de la imagen */
+}
+
+/* Estilo para el texto dentro de las mesas */
+.table p {
+    font-weight: bold; /* Texto en negrita */
+    color: #3b2c24; /* Color del texto marrón oscuro */
+    margin-top: 2%; /* Espacio superior */
+}
+
+/* Estilo para el texto dentro de las mesas en .table1 */
+.table1 p {
+    font-weight: bold; /* Texto en negrita */
+    color: #3b2c24; /* Color marrón oscuro */
+    margin-top: 2%; /* Espacio en la parte superior */
+}
+
+
+/* Estilo para el botón de cerrar sesión */
+.logout {
+    margin-top: 20px; /* Espacio en la parte superior */
+    padding: 10px 20px; /* Relleno interno */
+    background-color: #b89a7e; /* Fondo marrón claro */
+    color: #3b2c24; /* Color de texto marrón oscuro */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    font-weight: bold; /* Texto en negrita */
+    cursor: pointer; /* Muestra el cursor de mano al pasar sobre el botón */
+}
+
+/* Efecto hover para el botón de cerrar sesión */
+.logout:hover {
+    background-color: #9e8a6e; /* Cambia el color de fondo al pasar el cursor */
+}
+
+/* Estilo para mostrar una cuadrícula con mesas en posiciones específicas */
+.grid {
+    display: grid; /* Utiliza Grid Layout */
+    grid-template-columns: repeat(5, 1fr); /* Define 5 columnas con un ancho igual */
+    grid-template-rows: auto auto; /* Dos filas con altura automática */
+    gap: 20px; /* Espacio entre las celdas */
+    justify-items: center; /* Centra los elementos dentro de las celdas */
+    margin: 0 auto; /* Centra la cuadrícula en el contenedor */
+    grid-template-areas: 
+        "mesa1 . mesa2 . mesa3" /* Define las posiciones de las mesas */
+        ". mesa4 . mesa5 ."; /* Define las posiciones de mesa4 y mesa5 */
+}
+
+/* Otra cuadrícula con un diseño similar pero para otras mesas */
+.grid3 {
+    display: grid; /* Utiliza Grid Layout */
+    grid-template-columns: repeat(5, 1fr); /* 5 columnas de igual tamaño */
+    grid-template-rows: auto auto; /* Dos filas con altura automática */
+    gap: 20px; /* Espacio entre celdas */
+    justify-items: center; /* Centra los elementos dentro de las celdas */
+    margin: 0 auto; /* Centra la cuadrícula */
+    grid-template-areas: 
+        "mesa16 . mesa17 . mesa18" /* Define las posiciones de las mesas */
+        ". mesa19 . mesa20 ."; /* Define las posiciones de mesa19 y mesa20 */
+}
+
+/* Otra cuadrícula con 2 columnas */
+.grid5 {
+    display: grid; /* Utiliza Grid Layout */
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas de igual tamaño */
+    grid-template-rows: auto auto; /* Dos filas con altura automática */
+    gap: 50px; /* Espacio entre las celdas */
+    justify-items: center; /* Centra los elementos dentro de las celdas */
+    margin: 0 auto; /* Centra la cuadrícula */
+    grid-template-areas: 
+        "mesa46 . mesa47" /* Define las posiciones de las mesas */
+        ". mesa49 . mesa48 ."; /* Define las posiciones de mesa49 y mesa48 */
+}
+
+/* Cuadrícula con 5 columnas y 40px de espacio entre celdas */
+.grid2 {
+    display: grid; /* Utiliza Grid Layout */
+    grid-template-columns: repeat(5, 1fr); /* 5 columnas de igual tamaño */
+    gap: 40px; /* Espacio entre las celdas */
+    justify-items: center; /* Centra los elementos dentro de las celdas */
+    margin: 0 auto; /* Centra la cuadrícula */
+}
+
+/* Cuadrícula con 5 columnas y 25px de espacio entre celdas */
+.grid4 {
+    display: grid; /* Utiliza Grid Layout */
+    grid-template-columns: repeat(5, 1fr); /* 5 columnas de igual tamaño */
+    gap: 25px; /* Espacio entre celdas */
+    justify-items: center; /* Centra los elementos dentro de las celdas */
+    margin: 0 auto; /* Centra la cuadrícula */
+}
+
+/* Cuadrícula con 5 columnas y 25px de espacio entre celdas */
+.grid6 {
+    display: grid; /* Utiliza Grid Layout */
+    grid-template-columns: repeat(5, 1fr); /* 5 columnas de igual tamaño */
+    gap: 25px; /* Espacio entre las celdas */
+    justify-items: center; /* Centra los elementos dentro de las celdas */
+    margin: 0 auto; /* Centra la cuadrícula */
+}
+
+
+/* Asigna cada mesa a su área de la cuadrícula */
+#mesa1 {
+    grid-area: mesa1;
+}
+
+#mesa2 {
+    grid-area: mesa2;
+}
+
+#mesa3 {
+    grid-area: mesa3;
+}
+
+#mesa4 {
+    grid-area: mesa4;
+}
+
+#mesa5 {
+    grid-area: mesa5;
+}
+#mesa16 {
+    grid-area: mesa16;
+}
+
+#mesa17 {
+    grid-area: mesa17;
+}
+
+#mesa18 {
+    grid-area: mesa18;
+}
+
+#mesa19 {
+    grid-area: mesa19;
+}
+
+#mesa20 {
+    grid-area: mesa20;
+}
+
+
+.grid5 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto auto;
+    gap: 70px;
+    justify-items: center;
+    margin: 0 auto;
+    grid-template-areas: 
+        "mesa46 . mesa47"
+        ". mesa49 . mesa48 .";
+}
+
+
+
+
+/* Cuadrícula de mesas */
+.grid5 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+    grid-gap: 20px; /* Separación entre recuadros */
+    justify-items: center;
+    width: 100%;
+    max-width: 600px; /* Ancho máximo para centrar la cuadrícula */
+}
+
+.grid8 {
+    display: grid;
+    justify-items: center; /* Centra los elementos en el eje horizontal */
+    align-items: center; /* Centra los elementos en el eje vertical */
+    max-width: 600px; /* Limita el tamaño máximo de la cuadrícula */
+    margin: 0 auto; /* Centra la cuadrícula en el contenedor */
+    width: 100%;
+}
+
+/* Recuadro de cada mesa */
+.table1 {
+    width: 200px; /* Ancho de cada recuadro */
+    height: 200px; /* Alto de cada recuadro */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #d9a875; 
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    cursor: pointer;
+    border-radius: 15px; 
+    overflow: hidden;
+}
+
+.table1:hover {
+    transform: scale(1.05); /* Efecto al pasar el mouse */
+}
+
+
+.table:hover {
+    transform: scale(1.05); /* Efecto al pasar el mouse */
+}
+
+/* Imagen dentro del recuadro de mesa */
+.table1 img {
+    width: 60px; /* Tamaño reducido de la imagen */
+    height: 60px;
+    margin-bottom: 5px;
+    border-radius: 20px;  
+}
+
+/* Estilos para las mesas individuales */
+.table {
+    display: flex; /* Utiliza flexbox para organizar los elementos dentro de la mesa */
+    flex-direction: column; /* Alinea los elementos de la mesa en columna */
+    align-items: center; /* Centra los elementos horizontalmente */
+    border-radius: 10px; /* Bordes redondeados para la mesa */
+    padding: 10px; /* Espacio interno alrededor del contenido */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave para darle profundidad */
+    cursor: pointer; /* Cambia el cursor a mano cuando se pasa sobre la mesa */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición suave para efectos al pasar el ratón */
+    padding: 10px; /* Definido nuevamente, pero puede eliminarse ya que se repite */
+    border-radius: 8px; /* Bordes ligeramente redondeados, puede ser ajustado para variar */
+    text-align: center; /* Centra el texto dentro de la mesa */
+    width: 100%; /* La mesa ocupa todo el ancho disponible */
+}
+
+.tabla {
+    flex-direction: column; /* Organiza los elementos dentro de la tabla en columna */
+    align-items: center; /* Centra los elementos dentro de la tabla */
+    border-radius: 10px; /* Bordes redondeados para la tabla */
+    padding: 10px; /* Espacio interno alrededor del contenido de la tabla */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
+    padding: 10px; /* Redundante, ya está antes */
+    border-radius: 8px; /* Bordes ligeramente redondeados */
+    text-align: center; /* Centra el texto dentro de la tabla */
+    width: 100%; /* La tabla ocupa todo el ancho disponible */
+    border-radius: 10px; /* Bordes redondeados adicionales, esto puede ser redundante */
+    border: 10px black; /* Añade un borde negro de 10px */
+}
+
+.texto-historial {
+    color: white; /* Hace que el texto del historial sea blanco para destacarlo */
+}
+
+/* Cuadrícula de mesas */
+.grid7 {
+    display: grid; /* Utiliza CSS Grid para organizar las mesas */
+    grid-template-columns: repeat(4, 1fr); /* Crea 4 columnas de igual tamaño */
+    grid-template-rows: repeat(2, auto); /* Crea 2 filas con alturas automáticas */
+    gap: 20px; /* Añade espacio entre las mesas */
+    justify-items: center; /* Centra los elementos dentro de cada celda de la cuadrícula */
+    margin: 0 auto; /* Centra la cuadrícula dentro de su contenedor */
+    grid-template-areas: 
+        "mesa53 mesa54 mesa55 mesa56" /* Primera fila con mesas 53 a 56 */
+        "mesa57 mesa58 mesa59 mesa60"; /* Segunda fila con mesas 57 a 60 */
+}
+
+/* Ajustes para pantallas de 700px o menos */
+@media (max-width: 700px) {
+    /* Contenedor principal con ancho completo y relleno ajustado */
+    .container {
+        width: 100%; /* Ocupa todo el ancho disponible */
+        padding-left: 5%; /* Relleno izquierdo */
+        padding-right: 5%; /* Relleno derecho */
+        padding-top: 40%; /* Relleno superior */
+        padding-bottom: 7%; /* Relleno inferior */
+    }
+
+    /* Imagen superpuesta que se posiciona sobre el contenido */
+    .superpuesta {
+        position: absolute; /* Permite que la imagen se superponga sobre el contenido */
+        top: 0; /* Alinea la imagen al borde superior */
+        right: 0; /* Alinea la imagen al borde derecho */
+        width: 100px; /* Tamaño ajustado de la imagen */
+        height: auto; /* Mantiene la proporción de la imagen */
+        z-index: 10; /* Asegura que la imagen se muestre por encima de otros elementos */
+    }
+
+    /* Secciones de salas dispuestas en columna */
+    .room-sections {
+        flex-direction: column; /* Organiza las secciones en columna */
+        gap: 20px; /* Espacio entre las secciones */
+        height: 750px; /* Altura ajustada para las secciones */
+    }
+
+    /* Cada categoría de sala ocupa el 90% de la anchura disponible */
+    .room-category {
+        width: 90%; /* Anchura de la categoría */
+        height: 50%; /* Altura de la categoría */
+    }
+
+    /* Contenedor principal con flexbox y bordes redondeados */
+    .container2 {
+        width: 100%; /* Ocupa todo el ancho disponible */
+        padding: 3%; /* Relleno alrededor del contenido */
+        box-sizing: border-box; /* Asegura que el padding esté incluido en el tamaño total */
+        display: flex; /* Utiliza flexbox */
+        flex-direction: column; /* Disposición en columna */
+        align-items: center; /* Centra los elementos */
+        border-radius: 12px; /* Bordes redondeados */
+    }
+
+    /* Otro contenedor similar a .container2 */
+    .container3 {
+        width: 90%; /* Ocupa el 90% del ancho disponible */
+        padding: 3%; /* Relleno alrededor del contenido */
+        box-sizing: border-box; /* Asegura que el padding esté incluido en el tamaño total */
+        display: flex; /* Utiliza flexbox */
+        flex-direction: column; /* Disposición en columna */
+        align-items: center; /* Centra los elementos */
+        border-radius: 12px; /* Bordes redondeados */
+    }
+
+    /* Contenedor con fondo de imagen y posición ajustada */
+    .container4 {
+        text-align: center; /* Centra el texto */
+        background-image: url('./img/fondo2.jpg'); /* Ruta de la imagen de fondo */
+        background-size: 200%; /* Escala la imagen al 200% del contenedor */
+        background-position: center; /* Centra la imagen */
+        background-repeat: no-repeat; /* Evita que la imagen se repita */
+        background-position-y: 30px; /* Ajusta la posición vertical de la imagen */
+        width: 88%; /* Anchura del contenedor */
+        padding-left: 5%; /* Relleno izquierdo */
+        padding-right: 5%; /* Relleno derecho */
+        border-radius: 12px; /* Bordes redondeados */
+        position: relative; /* Necesario para la superposición de elementos */
+    }
+
+    /* Imagen en el encabezado ajustada */
+    .header img.imgTerraza1 {
+        width: 40%; /* Ajusta el tamaño de la imagen */
+        max-width: 280px; /* Limita el tamaño máximo de la imagen */
+        margin-bottom: 15px; /* Espacio debajo de la imagen */
+    }
+
+    /* Título principal */
+    h1 {
+        font-size: 45px; /* Tamaño del texto */
+        text-align: center; /* Centra el texto */
+    }
+
+    /* Cuadrícula de mesas ajustada en columnas */
+    .grid, .grid3 {
+        display: flex; /* Utiliza flexbox para la disposición */
+        align-items: center; /* Alinea los elementos en el centro */
+        gap: 5px; /* Espacio reducido entre las mesas */
+        width: 100%; /* Ocupa todo el ancho disponible */
+    }
+
+    /* Cuadrícula con 5 columnas para mesas */
+    .grid2 {
+        display: grid; /* Utiliza CSS Grid para las mesas */
+        grid-template-columns: repeat(5, 1fr); /* Crea 5 columnas */
+        grid-template-rows: repeat(2, auto); /* Dos filas con altura automática */
+        gap: 10px; /* Espacio entre las mesas */
+        justify-items: center; /* Centra las mesas en cada celda */
+        margin: 0 auto; /* Centra la cuadrícula en su contenedor */
+        grid-template-areas: 
+            "mesa1 mesa2 mesa3 mesa4 mesa5" /* Primera fila */
+            "mesa6 mesa7 mesa8 mesa9 mesa10"; /* Segunda fila */
+    }
+
+    /* Otra cuadrícula similar con 5 columnas */
+    .grid4 {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr); /* 5 columnas */
+        grid-template-rows: repeat(2, auto); /* 2 filas */
+        gap: 20px; /* Espacio entre las mesas */
+        justify-items: center;
+        margin: 0 auto;
+        grid-template-areas: 
+            "mesa1 mesa2 mesa3 mesa4 mesa5"
+            "mesa6 mesa7 mesa8 mesa9 mesa10";
+    }
+
+    /* Cuadrícula de 5 columnas con espacio reducido entre mesas */
+    .grid6 {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr); /* 5 columnas */
+        grid-template-rows: repeat(2, auto); /* 2 filas */
+        gap: 20px; /* Espacio reducido entre mesas */
+        justify-items: center;
+        margin: 0 auto;
+        grid-template-areas: 
+            "mesa1 mesa2 mesa3 mesa4 mesa5"
+            "mesa6 mesa7 mesa8 mesa9 mesa10";
+    }
+
+    /* Estilo de las imágenes dentro de las mesas */
+    .table img {
+        width: 110%; /* Ajusta el tamaño de las imágenes */
+        height: auto; /* Mantiene la proporción de la imagen */
+        margin-bottom: 10px; /* Espacio debajo de la imagen */
+    }
+
+    /* Mesas con ajustes en tamaño y espaciado */
+    .table {
+        width: 80%; /* Anchura de las mesas */
+        max-width: 500px; /* Limita el tamaño máximo de las mesas */
+        padding: 10px; /* Relleno dentro de las mesas */
+        margin: 5px 0; /* Espacio arriba y abajo de las mesas */
+        box-sizing: border-box; /* Incluye el padding en el tamaño total */
+    }
+
+    /* Estilo del texto dentro de cada mesa */
+    .table p {
+        font-size: 14px; /* Tamaño del texto */
+        margin: 5px 0; /* Espacio alrededor del texto */
+    }
+
+    /* Estilo de los botones de cierre de sesión */
+    .logout-button, .logout {
+        font-size: 14px; /* Tamaño del texto */
+        padding: 10px 15px; /* Espaciado interno del botón */
+        width: 100%; /* Ocupa todo el ancho disponible */
+        max-width: 280px; /* Limita el tamaño máximo */
+        margin: 8px 0; /* Espacio arriba y abajo de los botones */
+    }
+
+    /* Cuadrícula para una distribución específica de mesas */
+    .grid5 {
+        display: flex; /* Utiliza flexbox */
+        flex-wrap: nowrap; /* Evita que los elementos se envuelvan */
+        justify-content: space-between; /* Distribuye los elementos de manera uniforme */
+    }
+
+    /* Tamaño ajustado para los recuadros de mesa */
+    .table1 {
+        width: 80px; /* Anchura ajustada */
+        height: 80px; /* Altura ajustada */
+    }
+
+    /* Imagen en las mesas con tamaño reducido */
+    .table1 img {
+        width: 50px; /* Anchura ajustada de las imágenes */
+        height: 50px; /* Altura ajustada de las imágenes */
+    }
+
+    /* Ajuste del texto dentro de las mesas pequeñas */
+    .table1 p {
+        font-size: 0.8em; /* Tamaño reducido del texto */
+    }
+}
