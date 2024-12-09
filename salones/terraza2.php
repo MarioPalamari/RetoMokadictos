@@ -38,16 +38,15 @@ if (!isset($_SESSION['usuario'])) {
 $usuario = $_SESSION['usuario'];
 
 // Obtener ID del usuario basado en el nombre de usuario
-$sqlGetUserId = "SELECT user_id FROM tbl_users WHERE username = ?";
-$stmtGetUserId = $conexion->prepare($sqlGetUserId);
-if ($stmtGetUserId) {
-    $stmtGetUserId->bind_param("s", $usuario);
+try {
+    $sqlGetUserId = "SELECT user_id FROM tbl_users WHERE username = :usuario";
+    $stmtGetUserId = $conexion->prepare($sqlGetUserId);
+    $stmtGetUserId->bindParam(':usuario', $usuario, PDO::PARAM_STR);
     $stmtGetUserId->execute();
-    $result = $stmtGetUserId->get_result();
-    $userId = ($result->num_rows > 0) ? $result->fetch_assoc()['user_id'] : null;
-    $stmtGetUserId->close();
-} else {
-    echo "Error en la consulta SQL.";
+    $result = $stmtGetUserId->fetch(PDO::FETCH_ASSOC);
+    $userId = $result ? $result['user_id'] : null;
+} catch (Exception $e) {
+    echo "Error en la consulta SQL: " . $e->getMessage();
     exit;
 }
 
@@ -56,47 +55,60 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && isset($_P
     $tableId = $_POST['tableId'];
     $action = $_POST['action'];
 
-    if ($action === 'occupy') {
-        $sqlUpdateTable = "UPDATE tbl_tables SET status = 'occupied' WHERE table_id = ?";
-        $stmtUpdateTable = $conexion->prepare($sqlUpdateTable);
-        if ($stmtUpdateTable) {
-            $stmtUpdateTable->bind_param("i", $tableId);
+    try {
+        if ($action === 'occupy') {
+            $conexion->beginTransaction();
+
+            // Actualizar el estado de la mesa
+            $sqlUpdateTable = "UPDATE tbl_tables SET status = 'occupied' WHERE table_id = :tableId";
+            $stmtUpdateTable = $conexion->prepare($sqlUpdateTable);
+            $stmtUpdateTable->bindParam(':tableId', $tableId, PDO::PARAM_INT);
             $stmtUpdateTable->execute();
 
-            $sqlInsertOccupation = "INSERT INTO tbl_occupations (table_id, user_id, start_time) VALUES (?, ?, CURRENT_TIMESTAMP)";
+            // Insertar nueva ocupación
+            $sqlInsertOccupation = "INSERT INTO tbl_occupations (table_id, user_id, start_time) VALUES (:tableId, :userId, CURRENT_TIMESTAMP)";
             $stmtInsertOccupation = $conexion->prepare($sqlInsertOccupation);
-            if ($stmtInsertOccupation) {
-                $stmtInsertOccupation->bind_param("ii", $tableId, $userId);
-                $stmtInsertOccupation->execute();
-                $stmtInsertOccupation->close();
-            }
-            $stmtUpdateTable->close();
-        }
-    } elseif ($action === 'free') {
-        $sqlUpdateTable = "UPDATE tbl_tables SET status = 'free' WHERE table_id = ?";
-        $stmtUpdateTable = $conexion->prepare($sqlUpdateTable);
-        if ($stmtUpdateTable) {
-            $stmtUpdateTable->bind_param("i", $tableId);
+            $stmtInsertOccupation->bindParam(':tableId', $tableId, PDO::PARAM_INT);
+            $stmtInsertOccupation->bindParam(':userId', $userId, PDO::PARAM_INT);
+            $stmtInsertOccupation->execute();
+
+            $conexion->commit();
+        } elseif ($action === 'free') {
+            $conexion->beginTransaction();
+
+            // Liberar la mesa
+            $sqlUpdateTable = "UPDATE tbl_tables SET status = 'free' WHERE table_id = :tableId";
+            $stmtUpdateTable = $conexion->prepare($sqlUpdateTable);
+            $stmtUpdateTable->bindParam(':tableId', $tableId, PDO::PARAM_INT);
             $stmtUpdateTable->execute();
 
-            $sqlEndOccupation = "UPDATE tbl_occupations SET end_time = CURRENT_TIMESTAMP WHERE table_id = ? AND end_time IS NULL";
+            // Finalizar ocupación activa
+            $sqlEndOccupation = "UPDATE tbl_occupations SET end_time = CURRENT_TIMESTAMP WHERE table_id = :tableId AND end_time IS NULL";
             $stmtEndOccupation = $conexion->prepare($sqlEndOccupation);
-            if ($stmtEndOccupation) {
-                $stmtEndOccupation->bind_param("i", $tableId);
-                $stmtEndOccupation->execute();
-                $stmtEndOccupation->close();
-            }
-            $stmtUpdateTable->close();
+            $stmtEndOccupation->bindParam(':tableId', $tableId, PDO::PARAM_INT);
+            $stmtEndOccupation->execute();
+
+            $conexion->commit();
         }
-    } 
+    } catch (Exception $e) {
+        $conexion->rollBack();
+        echo "Error en la actualización: " . $e->getMessage();
+        exit;
+    }
 
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
 }
 
 // Consultar el estado actual de cada mesa en la terraza 2
-$sql = "SELECT table_id, status FROM tbl_tables WHERE room_id = 2"; 
-$result = $conexion->query($sql);
+try {
+    $sql = "SELECT table_id, status FROM tbl_tables WHERE room_id = 2";
+    $stmt = $conexion->query($sql);
+    $tables = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    echo "Error al consultar las mesas: " . $e->getMessage();
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -104,7 +116,7 @@ $result = $conexion->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terraza II</title> 
+    <title>Terraza II</title>
     <link rel="stylesheet" href="../styles.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sancreek&display=swap" rel="stylesheet">
@@ -118,8 +130,7 @@ $result = $conexion->query($sql);
         <div class="grid2">
             <?php
             $roomId = 2; 
-
-            while ($row = $result->fetch_assoc()) {
+            foreach ($tables as $row) {
                 $tableId = $row['table_id'];
                 $status = $row['status'];
                 $romanTableId = romanNumerals($tableId);
@@ -152,6 +163,5 @@ $result = $conexion->query($sql);
     <script>
     const roomId = 2;
     </script>
-
 </body>
 </html>

@@ -66,6 +66,21 @@ CREATE TABLE tbl_group_tables (
     FOREIGN KEY (table_id) REFERENCES tbl_tables(table_id) ON DELETE CASCADE
 );
 
+CREATE TABLE tbl_reservations (
+    reservation_id INT PRIMARY KEY AUTO_INCREMENT,
+    table_id INT NOT NULL,
+    user_id INT NOT NULL,
+    reservation_date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    status ENUM('pending', 'confirmed', 'cancelled', 'completed') DEFAULT 'pending',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (table_id) REFERENCES tbl_tables(table_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES tbl_users(user_id) ON DELETE CASCADE
+);
+
+ALTER TABLE tbl_tables MODIFY COLUMN status ENUM('free', 'occupied', 'reserved') DEFAULT 'free';
+
 -- Insertar roles en la tabla de roles
 INSERT INTO tbl_roles (role_name) VALUES ('Camarero'), ('Administrador');
 

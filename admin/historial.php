@@ -41,32 +41,49 @@ $sql = "
         1=1 ";
 
 if ($salaFiltro != '') {
-    // Modificado a LIKE para permitir coincidencias parciales
-    $sql .= " AND tbl_rooms.name LIKE '%" . $conexion->real_escape_string($salaFiltro) . "%' ";
+    $sql .= " AND tbl_rooms.name LIKE :sala ";
 }
 if ($estadoFiltro != '') {
-    $sql .= " AND tbl_tables.status = '" . $conexion->real_escape_string($estadoFiltro) . "' ";
+    $sql .= " AND tbl_tables.status = :estado ";
 }
 if ($usuarioFiltro != '') {
-    $sql .= " AND tbl_users.username LIKE '%" . $conexion->real_escape_string($usuarioFiltro) . "%' ";
+    $sql .= " AND tbl_users.username LIKE :usuario ";
 }
 if ($fechaFiltro != '') {
-    $sql .= " AND DATE(tbl_occupations.start_time) = '" . $conexion->real_escape_string($fechaFiltro) . "' ";
+    $sql .= " AND DATE(tbl_occupations.start_time) = :fecha ";
 }
 
 $sql .= " ORDER BY tbl_occupations.start_time DESC";
 
-// Ejecución de la consulta
-$result = $conexion->query($sql);
+// Preparar y ejecutar la consulta
+try {
+    $stmt = $conexion->prepare($sql);
+
+    if ($salaFiltro != '') {
+        $stmt->bindValue(':sala', "%$salaFiltro%");
+    }
+    if ($estadoFiltro != '') {
+        $stmt->bindValue(':estado', $estadoFiltro);
+    }
+    if ($usuarioFiltro != '') {
+        $stmt->bindValue(':usuario', "%$usuarioFiltro%");
+    }
+    if ($fechaFiltro != '') {
+        $stmt->bindValue(':fecha', $fechaFiltro);
+    }
+
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Error en la consulta: " . $e->getMessage());
+}
 
 // Obtener los usuarios de la base de datos
 $usuariosSql = "SELECT username FROM tbl_users";
-$usuariosResult = $conexion->query($usuariosSql);
+$usuariosStmt = $conexion->query($usuariosSql);
 $usuarios = [];
-if ($usuariosResult->num_rows > 0) {
-    while ($row = $usuariosResult->fetch_assoc()) {
-        $usuarios[] = $row['username'];
-    }
+if ($usuariosStmt->rowCount() > 0) {
+    $usuarios = $usuariosStmt->fetchAll(PDO::FETCH_COLUMN);
 }
 
 ?>
@@ -124,7 +141,7 @@ if ($usuariosResult->num_rows > 0) {
 
         <!-- Tabla de Resultados -->
             <?php
-            if ($result->num_rows > 0) {
+            if (count($result) > 0) {
                 echo "<table class='tabla tabla-bordered tabla-striped'>";
                 echo "<thead class='thead-dark'>
                         <tr>
@@ -139,25 +156,21 @@ if ($usuariosResult->num_rows > 0) {
                 echo "<tbody>";
                 
                 // Mostrar resultados de la consulta con un bucle for
-                $rows = $result->fetch_all(MYSQLI_ASSOC);
-                $rowCount = count($rows);
-                
-                for ($i = 0; $i < $rowCount; $i++) {
-                    $estadoClase = $rows[$i]["status"] == "occupied" ? "table-danger" : "table-success";
+                foreach ($result as $row) {
+                    $estadoClase = $row["status"] == "occupied" ? "table-danger" : "table-success";
                     echo "<tr class='{$estadoClase}'>
-                            <td>" . $rows[$i]["table_id"] . "</td>
-                            <td>" . $rows[$i]["room_name"] . "</td>
-                            <td>" . ucfirst($rows[$i]["status"]) . "</td>
-                            <td>" . ($rows[$i]["start_time"] ?: "N/A") . "</td>
-                            <td>" . ($rows[$i]["end_time"] ? $rows[$i]["end_time"] : "Ocupada actualmente") . "</td>
-                            <td>" . $rows[$i]["username"] . "</td>
+                            <td>" . htmlspecialchars($row["table_number"]) . "</td>
+                            <td>" . htmlspecialchars($row["room_name"]) . "</td>
+                            <td>" . ucfirst($row["status"]) . "</td>
+                            <td>" . ($row["start_time"] ?: "N/A") . "</td>
+                            <td>" . ($row["end_time"] ? $row["end_time"] : "Ocupada actualmente") . "</td>
+                            <td>" . htmlspecialchars($row["username"]) . "</td>
                           </tr>";
                 }
                 echo "</tbody></table>";
             } else {
                 echo "<p class='text-center text-warning'>No hay resultados que coincidan con los filtros aplicados.</p>";
             }
-            $conexion->close();
             ?>
         <br>
         <div class="text-right mb-3">
@@ -168,7 +181,7 @@ if ($usuariosResult->num_rows > 0) {
         <button class="logout-button" onclick="logout()">Cerrar Sesión</button>
         <!-- Script para la confirmación con SweetAlert -->
         <script>
-        function confirmarEliminacion(tableId) {
+        function confirmarEliminacion() {
             Swal.fire({
                 title: '¿Estás seguro?',
                 text: "Esta acción eliminará la ocupación de la mesa y no se puede deshacer.",
@@ -180,8 +193,8 @@ if ($usuariosResult->num_rows > 0) {
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Redirigir al script de eliminación pasando el ID de la mesa
-                    window.location.href = 'eliminar_historial.php?id=' + tableId;
+                    // Redirigir al script de eliminación
+                    window.location.href = 'eliminar_historial.php';
                 }
             });
         }

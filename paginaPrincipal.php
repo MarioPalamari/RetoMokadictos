@@ -3,54 +3,51 @@ session_start();
 include('./conexion/conexion.php');
 
 if (!isset($_SESSION['usuario'])) {
-    header('Location: ./index.php?error=1') ;   
-exit();
+    header('Location: ./index.php?error=1');   
+    exit();
 }
 
-// Funciones para obtener el número de mesas libres y ocupadas en cada terraza
+// Function to get the state of tables (free/occupied) in terraces
 function obtenerEstadoMesas($conexion, $roomId) {
     $sql = "SELECT 
                 SUM(CASE WHEN status = 'occupied' THEN 1 ELSE 0 END) AS ocupadas,
                 SUM(CASE WHEN status = 'free' THEN 1 ELSE 0 END) AS libres
-            FROM tbl_tables WHERE room_id = ?";
+            FROM tbl_tables WHERE room_id = :roomId";
     $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("i", $roomId);
+    $stmt->bindParam(':roomId', $roomId, PDO::PARAM_INT); // PDO binding
     $stmt->execute();
-    $result = $stmt->get_result();
-    return $result->fetch_assoc();
+    return $stmt->fetch(PDO::FETCH_ASSOC); // Use PDO fetch style
 }
 
 $estadoTerraza1 = obtenerEstadoMesas($conexion, 1); // Terraza 1
 $estadoTerraza2 = obtenerEstadoMesas($conexion, 2); // Terraza 2
 $estadoTerraza3 = obtenerEstadoMesas($conexion, 3); // Terraza 3
 
-// Funciones para obtener el número de mesas libres y ocupadas en cada terraza
+// Function to get the state of tables (free/occupied) in salons
 function obtenerEstadoSalones($conexion, $roomId) {
     $sql = "SELECT 
                 SUM(CASE WHEN status = 'occupied' THEN 1 ELSE 0 END) AS ocupadas,
                 SUM(CASE WHEN status = 'free' THEN 1 ELSE 0 END) AS libres
-            FROM tbl_tables WHERE room_id = ?";
+            FROM tbl_tables WHERE room_id = :roomId";
     $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("i", $roomId);
+    $stmt->bindParam(':roomId', $roomId, PDO::PARAM_INT); // PDO binding
     $stmt->execute();
-    $result = $stmt->get_result();
-    return $result->fetch_assoc();
+    return $stmt->fetch(PDO::FETCH_ASSOC); // Use PDO fetch style
 }
 
 $estadoSalon1 = obtenerEstadoSalones($conexion, 4); // Salon 1
 $estadoSalon2 = obtenerEstadoSalones($conexion, 5); // Salon 2
 
-// Funciones para obtener el número de mesas libres y ocupadas en cada terraza
+// Function to get the state of tables (free/occupied) in VIP rooms
 function obtenerEstadoVIPS($conexion, $roomId) {
     $sql = "SELECT 
                 SUM(CASE WHEN status = 'occupied' THEN 1 ELSE 0 END) AS ocupadas,
                 SUM(CASE WHEN status = 'free' THEN 1 ELSE 0 END) AS libres
-            FROM tbl_tables WHERE room_id = ?";
+            FROM tbl_tables WHERE room_id = :roomId";
     $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("i", $roomId);
+    $stmt->bindParam(':roomId', $roomId, PDO::PARAM_INT); // PDO binding
     $stmt->execute();
-    $result = $stmt->get_result();
-    return $result->fetch_assoc();
+    return $stmt->fetch(PDO::FETCH_ASSOC); // Use PDO fetch style
 }
 
 $estadoVIP1 = obtenerEstadoVIPS($conexion, 6); // VIP 1
@@ -58,6 +55,7 @@ $estadoVIP2 = obtenerEstadoVIPS($conexion, 7); // VIP 2
 $estadoVIP3 = obtenerEstadoVIPS($conexion, 8); // VIP 3
 $estadoVIP4 = obtenerEstadoVIPS($conexion, 9); // VIP 4
 ?>
+
 
 
 <!DOCTYPE html>
