@@ -55,7 +55,7 @@ try {
     exit;
 }
 
-// Actualizar la ocupación o desocupación de una mesa
+// Actualizar la ocupación o desocupación de una mesa o realizar una reserva
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && isset($_POST['tableId'])) {
     $tableId = $_POST['tableId'];
     $action = $_POST['action'];
@@ -88,6 +88,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && isset($_P
             $stmtEndOccupation = $conexion->prepare($sqlEndOccupation);
             $stmtEndOccupation->bindParam(':tableId', $tableId, PDO::PARAM_INT);
             $stmtEndOccupation->execute();
+        } elseif ($action === 'reserve' && isset($_POST['reservationDate'], $_POST['startTime'], $_POST['endTime'])) {
+            // Realizar reserva de mesa
+            $reservationDate = $_POST['reservationDate'];
+            $startTime = $_POST['startTime'];
+            $endTime = $_POST['endTime'];
+
+            // Actualizar estado de la mesa a "reserved"
+            $sqlUpdateTable = "UPDATE tbl_tables SET status = 'reserved' WHERE table_id = :tableId";
+            $stmtUpdateTable = $conexion->prepare($sqlUpdateTable);
+            $stmtUpdateTable->bindParam(':tableId', $tableId, PDO::PARAM_INT);
+            $stmtUpdateTable->execute();
+
+            // Insertar datos de la reserva
+            $sqlInsertReservation = "INSERT INTO tbl_reservations (table_id, user_id, reservation_date, start_time, end_time) 
+                                     VALUES (:tableId, :userId, :reservationDate, :startTime, :endTime)";
+            $stmtInsertReservation = $conexion->prepare($sqlInsertReservation);
+            $stmtInsertReservation->bindParam(':tableId', $tableId, PDO::PARAM_INT);
+            $stmtInsertReservation->bindParam(':userId', $userId, PDO::PARAM_INT);
+            $stmtInsertReservation->bindParam(':reservationDate', $reservationDate);
+            $stmtInsertReservation->bindParam(':startTime', $startTime);
+            $stmtInsertReservation->bindParam(':endTime', $endTime);
+            $stmtInsertReservation->execute();
         }
 
         $conexion->commit();
@@ -135,7 +157,8 @@ try {
                 $tableId = $row['table_id'];
                 $status = $row['status'];
                 $romanTableId = romanNumerals($tableId); // Convertimos a números romanos
-                $imgSrc = ($status === 'occupied') ? '../img/sombrillaRoja.webp' : '../img/sombrilla.webp';
+                $imgSrc = ($status === 'occupied') ? '../img/sombrillaRoja.webp' : 
+                          ($status === 'reserved' ? '../img/sombrillaAmarilla.webp' : '../img/sombrilla.webp');
 
                 echo "
                 <div class='table1' id='mesa$tableId' onclick='openTableOptions($tableId, \"$status\", \"$romanTableId\")'>
@@ -146,7 +169,20 @@ try {
                 <form id='formMesa$tableId' method='POST' style='display: none;'>
                     <input type='hidden' name='tableId' value='$tableId'>
                     <input type='hidden' name='action' id='action$tableId'>
+                    <input type='hidden' name='reservationDate' id='reservationDate$tableId'>
+                    <input type='hidden' name='startTime' id='startTime$tableId'>
+                    <input type='hidden' name='endTime' id='endTime$tableId'>
                 </form>
+
+                <div id='reservationForm$tableId' style='display: none;'>
+                    <h3>Reservar Mesa $romanTableId</h3>
+                    <form method='POST' action='' onsubmit='reserveTable($tableId); return false;'>
+                        <input type='date' name='reservationDate' id='reservationDate$tableId' required>
+                        <input type='time' name='startTime' id='startTime$tableId' required>
+                        <input type='time' name='endTime' id='endTime$tableId' required>
+                        <button type='submit'>Reservar</button>
+                    </form>
+                </div>
                 ";
             }
             ?>

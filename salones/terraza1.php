@@ -45,12 +45,13 @@ $stmtGetUserId->execute();
 $result = $stmtGetUserId->fetch(PDO::FETCH_ASSOC);
 $userId = $result ? $result['user_id'] : null;
 
-// Update table occupation or release
+// Handle table occupation or release or reservation
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && isset($_POST['tableId'])) {
     $tableId = $_POST['tableId'];
     $action = $_POST['action'];
 
     if ($action === 'occupy') {
+        // Occupy the table
         $sqlUpdateTable = "UPDATE tbl_tables SET status = 'occupied' WHERE table_id = :tableId";
         $stmtUpdateTable = $conexion->prepare($sqlUpdateTable);
         $stmtUpdateTable->bindParam(':tableId', $tableId, PDO::PARAM_INT);
@@ -62,6 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && isset($_P
         $stmtInsertOccupation->bindParam(':userId', $userId, PDO::PARAM_INT);
         $stmtInsertOccupation->execute();
     } elseif ($action === 'free') {
+        // Free the table
         $sqlUpdateTable = "UPDATE tbl_tables SET status = 'free' WHERE table_id = :tableId";
         $stmtUpdateTable = $conexion->prepare($sqlUpdateTable);
         $stmtUpdateTable->bindParam(':tableId', $tableId, PDO::PARAM_INT);
@@ -71,6 +73,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && isset($_P
         $stmtEndOccupation = $conexion->prepare($sqlEndOccupation);
         $stmtEndOccupation->bindParam(':tableId', $tableId, PDO::PARAM_INT);
         $stmtEndOccupation->execute();
+    } elseif ($action === 'reserve' && isset($_POST['reservationDate'], $_POST['startTime'], $_POST['endTime'])) {
+        // Reserve the table
+        $reservationDate = $_POST['reservationDate'];
+        $startTime = $_POST['startTime'];
+        $endTime = $_POST['endTime'];
+
+        // Update table status to reserved
+        $sqlUpdateTable = "UPDATE tbl_tables SET status = 'reserved' WHERE table_id = :tableId";
+        $stmtUpdateTable = $conexion->prepare($sqlUpdateTable);
+        $stmtUpdateTable->bindParam(':tableId', $tableId, PDO::PARAM_INT);
+        $stmtUpdateTable->execute();
+
+        // Insert reservation data into tbl_reservations
+        $sqlInsertReservation = "INSERT INTO tbl_reservations (table_id, user_id, reservation_date, start_time, end_time) 
+                                 VALUES (:tableId, :userId, :reservationDate, :startTime, :endTime)";
+        $stmtInsertReservation = $conexion->prepare($sqlInsertReservation);
+        $stmtInsertReservation->bindParam(':tableId', $tableId, PDO::PARAM_INT);
+        $stmtInsertReservation->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmtInsertReservation->bindParam(':reservationDate', $reservationDate);
+        $stmtInsertReservation->bindParam(':startTime', $startTime);
+        $stmtInsertReservation->bindParam(':endTime', $endTime);
+        $stmtInsertReservation->execute();
     }
 
     header("Location: " . $_SERVER['PHP_SELF']);
@@ -106,7 +130,8 @@ $tables = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all results as an associat
                 $tableId = $row['table_id'];
                 $status = $row['status'];
                 $romanTableId = romanNumerals($tableId); // Convert to Roman numerals
-                $imgSrc = ($status === 'occupied') ? '../img/sombrillaRoja.webp' : '../img/sombrilla.webp';
+                $imgSrc = ($status === 'occupied') ? '../img/sombrillaRoja.webp' : 
+                          ($status === 'reserved' ? '../img/sombrillaAmarilla.webp' : '../img/sombrilla.webp');
 
                 echo "
                 <div class='table' id='mesa$tableId' onclick='openTableOptions($tableId, \"$status\", \"$romanTableId\")'>
@@ -117,7 +142,9 @@ $tables = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all results as an associat
                 <form id='formMesa$tableId' method='POST' style='display: none;'>
                     <input type='hidden' name='tableId' value='$tableId'>
                     <input type='hidden' name='action' id='action$tableId'>
-                    <input type='hidden' name='newRoomId' id='newRoomId$tableId'>
+                    <input type='hidden' name='reservationDate' id='reservationDate$tableId'>
+                    <input type='hidden' name='startTime' id='startTime$tableId'>
+                    <input type='hidden' name='endTime' id='endTime$tableId'>
                 </form>
                 ";
             }

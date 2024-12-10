@@ -33,7 +33,7 @@ CREATE TABLE tbl_tables (
     current_room_id INT,
     table_number INT NOT NULL,
     capacity INT NOT NULL,
-    status ENUM('free', 'occupied') DEFAULT 'free',
+    status ENUM('free', 'occupied', 'reserved') DEFAULT 'free',
     FOREIGN KEY (room_id) REFERENCES tbl_rooms(room_id) ON DELETE CASCADE,
     FOREIGN KEY (current_room_id) REFERENCES tbl_rooms(room_id) ON DELETE SET NULL
 );
@@ -52,7 +52,7 @@ CREATE TABLE tbl_occupations (
 -- Tabla de Grupos de Mesas (para juntar mesas temporalmente)
 CREATE TABLE tbl_table_groups (
     group_id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT,  -- Ahora user_id puede ser NULL
+    user_id INT,
     status ENUM('active', 'completed') DEFAULT 'active',
     FOREIGN KEY (user_id) REFERENCES tbl_users(user_id) ON DELETE SET NULL
 );
@@ -79,7 +79,7 @@ CREATE TABLE tbl_reservations (
     FOREIGN KEY (user_id) REFERENCES tbl_users(user_id) ON DELETE CASCADE
 );
 
-ALTER TABLE tbl_tables MODIFY COLUMN status ENUM('free', 'occupied', 'reserved') DEFAULT 'free';
+-- ALTER TABLE tbl_tables MODIFY COLUMN status ENUM('free', 'occupied', 'reserved') DEFAULT 'free';
 
 -- Insertar roles en la tabla de roles
 INSERT INTO tbl_roles (role_name) VALUES ('Camarero'), ('Administrador');
