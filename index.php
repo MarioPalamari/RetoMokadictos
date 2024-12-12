@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -13,7 +12,7 @@
     <div class="container">
         <div>
             <form action="./procLogin/validacionLogin.php" method="POST" onsubmit="return validarFormulario()">
-                <div><p class="sombraindex">Iniciar SesionDD</p></div>
+                <div><p class="sombraindex">Iniciar Sesion</p></div>
                 <div><p class="tituloindex">Iniciar Sesion</p></div>
                 <!-- Contenedor flex para los inputs -->
                 <div class="section-1">
@@ -34,10 +33,10 @@
                 <button type="submit">ENTRAR</button>
                 <?php
                 if (isset($_GET['error']) && $_GET['error'] == 1) {
-                    echo "<p style='color: red'>Usuario o contraseña incorrectos</p>";
+                    echo "<p>Usuario o contraseña incorrectos</p>";
                 }
                 if (isset($_GET['error']) && $_GET['error'] == 2) {
-                    echo "<p style='color: red'>No eres un administrador</p>";
+                    echo "<p>No eres un administrador</p>";
                 }
                 ?>
             </form>

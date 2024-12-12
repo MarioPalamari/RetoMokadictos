@@ -243,3 +243,107 @@ img {
         white-space: nowrap; /* Evita que el texto se divida en varias líneas */
     }
 }
+
+/* Estilos específicos para el formulario de login */
+.login-form {
+    background-color: #a67c52;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 100%;
+    margin-top: 50px;
+}
+
+/* Sobrescribir el estilo general de form para los formularios del panel */
+.crud-form {
+    background: none;
+    padding: 0;
+    box-shadow: none;
+    margin-top: 0;
+}
+
+/* Estilos para el panel de administración */
+.admin-container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px;
+    color: white;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.nav-tabs .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    border: none;
+    padding: 10px 20px;
+}
+
+.nav-tabs .nav-link:hover {
+    color: white;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-tabs .nav-link.active {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+}
+
+.table {
+    color: white;
+}
+
+.table th {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-bottom: none;
+}
+
+.table td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    vertical-align: middle;
+}
+
+.table td form {
+    background: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* Estilos para los botones en las tablas */
+.table .btn {
+    margin: 0;
+    background-color: transparent;
+}
+
+.table .btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.table .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.filter-section {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.filter-section input,
+.filter-section select {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    padding: 8px;
+}
+
+.filter-section .btn {
+    margin-right: 10px;
+}
