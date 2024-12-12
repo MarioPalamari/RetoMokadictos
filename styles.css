@@ -711,3 +711,73 @@ h1 {
         font-size: 0.8em; /* Tamaño reducido del texto */
     }
 }
+
+/* Estilos personalizados para SweetAlert2 */
+.custom-swal-popup {
+    background-color: #8A5021 !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+}
+
+.custom-swal-title {
+    color: #000 !important;
+    font-family: 'Arial Black', sans-serif !important;
+    font-size: 24px !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+.custom-swal-button {
+    background-color: #d9a875 !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    border-radius: 5px !important;
+    margin: 5px !important;
+    padding: 10px 20px !important;
+    border: none !important;
+}
+
+.custom-swal-button:hover {
+    background-color: #c49665 !important;
+}
+
+.custom-swal-content {
+    color: #000 !important;
+    margin: 10px 0 !important;
+}
+
+.swal2-input {
+    background-color: #d9a875 !important;
+    border: 1px solid #3b2c24 !important;
+    color: #000 !important;
+    margin: 5px 0 !important;
+}
+
+.swal2-input::placeholder {
+    color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.reservations-list {
+    background-color: #d9a875 !important;
+    padding: 15px !important;
+    border-radius: 8px !important;
+    margin-top: 10px !important;
+}
+
+.reservation-item {
+    border-bottom: 1px solid #8A5021 !important;
+    padding: 10px 0 !important;
+    color: #000 !important;
+}
+
+/* Asegurarse de que todo el texto en el SweetAlert sea negro */
+.swal2-html-container {
+    color: #000 !important;
+}
+
+.swal2-content {
+    color: #000 !important;
+}
+
+.swal2-text {
+    color: #000 !important;
+}

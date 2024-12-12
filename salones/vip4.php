@@ -125,7 +125,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && isset($_P
 
 // Consultar el estado actual de las mesas 53 a 60
 try {
-    $sql = "SELECT table_id, status FROM tbl_tables WHERE table_id BETWEEN 53 AND 60";
+    $sql = "SELECT t.table_id, t.status,
+            (SELECT COUNT(*) FROM tbl_reservations r 
+             WHERE r.table_id = t.table_id 
+             AND r.reservation_date >= CURRENT_DATE) as has_reservations
+            FROM tbl_tables t 
+            WHERE t.table_id BETWEEN 53 AND 60";
     $stmt = $conexion->query($sql);
     $tables = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
@@ -139,7 +144,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vip IV</title> <!-- Aquí cambiamos el título a Vip IV -->
+    <title>V I P IV</title>
     <link rel="stylesheet" href="../styles.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sancreek&display=swap" rel="stylesheet">
@@ -148,7 +153,7 @@ try {
     <div><img src="./../img/logo.webp" alt="Logo de la página" class="superpuesta"><br></div>
     <div class="container2">
         <div class="header">
-            <h1>V I P IV</h1> 
+            <h1>V I P IV</h1>
         </div>
         <div class="grid7">
             <?php
@@ -156,9 +161,12 @@ try {
             foreach ($tables as $row) {
                 $tableId = $row['table_id'];
                 $status = $row['status'];
-                $romanTableId = romanNumerals($tableId); // Convertimos a números romanos
-                $imgSrc = ($status === 'occupied') ? '../img/sombrillaRoja.webp' : 
-                          ($status === 'reserved' ? '../img/sombrillaAmarilla.webp' : '../img/sombrilla.webp');
+                $hasReservations = $row['has_reservations'] > 0;
+                $romanTableId = romanNumerals($tableId);
+                
+                // Si está ocupada, mostrar roja sin importar las reservas
+                $imgSrc = $status === 'occupied' ? '../img/sombrillaRoja.webp' : 
+                          ($hasReservations ? '../img/sombrillaAmarilla.webp' : '../img/sombrilla.webp');
 
                 echo "
                 <div class='table1' id='mesa$tableId' onclick='openTableOptions($tableId, \"$status\", \"$romanTableId\")'>
@@ -174,15 +182,10 @@ try {
                     <input type='hidden' name='endTime' id='endTime$tableId'>
                 </form>
 
-                <div id='reservationForm$tableId' style='display: none;'>
-                    <h3>Reservar Mesa $romanTableId</h3>
-                    <form method='POST' action='' onsubmit='reserveTable($tableId); return false;'>
-                        <input type='date' name='reservationDate' id='reservationDate$tableId' required>
-                        <input type='time' name='startTime' id='startTime$tableId' required>
-                        <input type='time' name='endTime' id='endTime$tableId' required>
-                        <button type='submit'>Reservar</button>
-                    </form>
-                </div>
+                <form id='viewReservationsForm$tableId' method='POST' style='display: none;'>
+                    <input type='hidden' name='tableId' value='$tableId'>
+                    <input type='hidden' name='action' value='viewReservations'>
+                </form>
                 ";
             }
             ?>
@@ -196,5 +199,10 @@ try {
 
     <script src="../validaciones/funcionesSalones.js"></script>
     <script src="../validaciones/funciones.js"></script>
+
+    <!-- Formulario oculto para eliminar reservas -->
+    <form id="deleteReservationForm" method="POST" style="display: none;">
+        <input type="hidden" name="deleteReservationId" id="deleteReservationId">
+    </form>
 </body>
 </html>

@@ -179,3 +179,6 @@ INSERT INTO tbl_tables (room_id, current_room_id, table_number, capacity, status
 
 
 
+-- Verificar si existe la tabla tbl_reservations, y luego modificarla
+ALTER TABLE tbl_reservations 
+ADD UNIQUE (table_id, reservation_date, start_time, end_time);

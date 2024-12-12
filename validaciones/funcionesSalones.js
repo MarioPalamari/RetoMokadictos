@@ -1,83 +1,179 @@
+// Configuración global de SweetAlert2 para mantener un estilo consistente
+const sweetAlertOptions = {
+    customClass: {
+        popup: 'custom-swal-popup',
+        title: 'custom-swal-title',
+        confirmButton: 'custom-swal-button',
+        cancelButton: 'custom-swal-button',
+        content: 'custom-swal-content'
+    },
+    background: '#8A5021',
+    color: '#fff'
+};
+
 // Función para mostrar las opciones de una mesa
 function openTableOptions(tableId, status, romanTableId) {
-    const actions = [];
-
-    // Lógica para determinar las opciones disponibles según el estado actual
+    let options = [];
+    
     if (status === 'free') {
-        actions.push({ label: 'Ocupar Mesa', value: 'occupy' });
-        actions.push({ label: 'Reservar Mesa', value: 'reserve' });
+        options = ['Ocupar Mesa', 'Reservar Mesa', 'Ver Reservas'];
     } else if (status === 'occupied') {
-        actions.push({ label: 'Desocupar Mesa', value: 'free' });
+        options = ['Liberar Mesa', 'Ver Reservas'];
     } else if (status === 'reserved') {
-        actions.push({ label: 'Cancelar Reserva', value: 'free' });
-        actions.push({ label: 'Ocupar Mesa', value: 'occupy' });
+        options = ['Ocupar Mesa', 'Reservar Mesa', 'Ver Reservas'];
     }
 
-    // Crear los botones dinámicamente
-    let optionsHtml = actions.map(action => 
-        `<button onclick="${action.value === 'reserve' ? `openReservationForm(${tableId}, '${romanTableId}')` : `submitAction(${tableId}, '${action.value}')`}"
-                style="padding: 10px 20px; margin: 5px; background-color: #8A5021; color: white; 
-                border: none; border-radius: 10px; cursor: pointer; width: 250px; text-align: center;">
-            ${action.label}
-        </button>`
-    ).join('');
-
-    // Mostrar el SweetAlert con las opciones
     Swal.fire({
-        title: `<h2 style="color: white; font-family: 'Sancreek', cursive;">Mesa ${romanTableId}</h2>`,
-        html: `<div style="display: flex; flex-direction: column; align-items: center;">${optionsHtml}</div>`,
-        showConfirmButton: false,
+        ...sweetAlertOptions,
+        title: `Mesa ${romanTableId}`,
+        text: `Estado actual: ${status === 'free' ? 'Libre' : status === 'occupied' ? 'Ocupada' : 'Reservada'}`,
         showCancelButton: true,
-        cancelButtonText: '<span>Cancelar</span>',
-        customClass: {
-            popup: 'custom-swal-popup',
-            title: 'custom-swal-title',
-            content: 'custom-swal-content'
-        },
-        background: 'rgba(210, 180, 140, 0.8)',  
-        backdrop: 'rgba(0, 0, 0, 0.5)'
+        showConfirmButton: false,
+        cancelButtonText: 'Cancelar',
+        html: options.map(option => 
+            `<button class="swal2-confirm swal2-styled custom-swal-button" onclick="handleOption('${option}', ${tableId})">${option}</button>`
+        ).join('')
     });
 }
 
-// Función para mostrar el formulario de reserva
-function openReservationForm(tableId, romanTableId) {
+function handleOption(option, tableId) {
+    switch(option) {
+        case 'Ocupar Mesa':
+            document.getElementById(`action${tableId}`).value = 'occupy';
+            document.getElementById(`formMesa${tableId}`).submit();
+            break;
+        case 'Liberar Mesa':
+            document.getElementById(`action${tableId}`).value = 'free';
+            document.getElementById(`formMesa${tableId}`).submit();
+            break;
+        case 'Reservar Mesa':
+            showReservationForm(tableId);
+            break;
+        case 'Ver Reservas':
+            showReservations(tableId);
+            break;
+    }
+}
+
+function showReservationForm(tableId) {
     Swal.fire({
-        title: `Reservar Mesa ${romanTableId}`,
+        ...sweetAlertOptions,
+        title: 'Realizar Reserva',
         html: `
-            <input type="date" id="reservationDate" class="swal2-input" placeholder="Fecha de reserva">
-            <input type="time" id="startTime" class="swal2-input" placeholder="Hora de inicio">
-            <input type="time" id="endTime" class="swal2-input" placeholder="Hora de fin">
+            <div class="form-group custom-swal-content">
+                <label for="reservationDate">Fecha:</label>
+                <input type="date" id="reservationDate" class="swal2-input" min="${new Date().toISOString().split('T')[0]}">
+            </div>
+            <div class="form-group custom-swal-content">
+                <label for="startTime">Hora inicio:</label>
+                <input type="time" id="startTime" class="swal2-input">
+            </div>
+            <div class="form-group custom-swal-content">
+                <label for="endTime">Hora fin:</label>
+                <input type="time" id="endTime" class="swal2-input">
+            </div>
         `,
-        confirmButtonText: 'Reservar',
         showCancelButton: true,
-        cancelButtonText: 'Cancelar',
-        preConfirm: () => {
-            const reservationDate = document.getElementById('reservationDate').value;
-            const startTime = document.getElementById('startTime').value;
-            const endTime = document.getElementById('endTime').value;
-
-            if (!reservationDate || !startTime || !endTime) {
-                Swal.showValidationMessage('Todos los campos son obligatorios');
-                return false;
-            }
-
-            return { reservationDate, startTime, endTime };
-        }
+        confirmButtonText: 'Reservar',
+        cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Actualiza el formulario oculto con los valores proporcionados
-            document.getElementById(`reservationDate${tableId}`).value = result.value.reservationDate;
-            document.getElementById(`startTime${tableId}`).value = result.value.startTime;
-            document.getElementById(`endTime${tableId}`).value = result.value.endTime;
-
-            // Cambia la acción a 'reserve' y envía el formulario
-            submitAction(tableId, 'reserve');
+            const date = document.getElementById('reservationDate').value;
+            const start = document.getElementById('startTime').value;
+            const end = document.getElementById('endTime').value;
+            
+            if (!date || !start || !end) {
+                Swal.fire({
+                    ...sweetAlertOptions,
+                    title: 'Error',
+                    text: 'Por favor complete todos los campos',
+                    icon: 'error'
+                });
+                return;
+            }
+            if (start >= end) {
+                Swal.fire({
+                    ...sweetAlertOptions,
+                    title: 'Error',
+                    text: 'La hora de fin debe ser posterior a la hora de inicio',
+                    icon: 'error'
+                });
+                return;
+            }
+            
+            document.getElementById(`action${tableId}`).value = 'reserve';
+            document.getElementById(`reservationDate${tableId}`).value = date;
+            document.getElementById(`startTime${tableId}`).value = start;
+            document.getElementById(`endTime${tableId}`).value = end;
+            document.getElementById(`formMesa${tableId}`).submit();
         }
     });
 }
 
-// Función para enviar la acción seleccionada
-function submitAction(tableId, action) {
-    document.getElementById(`action${tableId}`).value = action;
-    document.getElementById(`formMesa${tableId}`).submit();
+function showReservations(tableId) {
+    fetch(`${window.location.pathname}?action=viewReservations&tableId=${tableId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `action=viewReservations&tableId=${tableId}`
+    })
+    .then(response => response.text())
+    .then(html => {
+        Swal.fire({
+            ...sweetAlertOptions,
+            title: 'Reservas de la Mesa',
+            html: html,
+            width: 600,
+            confirmButtonText: 'Cerrar'
+        });
+    });
+}
+
+function showReservationDetails(reservationsHtml, tableId) {
+    Swal.fire({
+        title: 'Reservas de la Mesa',
+        html: reservationsHtml,
+        width: 600,
+        showCancelButton: true,
+        confirmButtonText: 'Cerrar',
+        cancelButtonText: 'Eliminar Reserva',
+        preConfirm: () => {
+            // Aquí podrías manejar la lógica para cerrar el modal
+        },
+        preCancel: () => {
+            // Aquí podrías manejar la lógica para eliminar una reserva
+            // Por ejemplo, podrías abrir otro SweetAlert para confirmar la eliminación
+        }
+    });
+}
+
+function logout() {
+    Swal.fire({
+        title: '¿Estás seguro de que quieres cerrar sesión?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, cerrar sesión',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '../logout.php';
+        }
+    });
+}
+
+function deleteReservation(reservationId) {
+    Swal.fire({
+        ...sweetAlertOptions,
+        title: '¿Estás seguro?',
+        text: "No podrás revertir esta acción",
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('deleteReservationId').value = reservationId;
+            document.getElementById('deleteReservationForm').submit();
+        }
+    });
 }
