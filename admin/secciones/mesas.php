@@ -42,26 +42,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['accion'])) {
         switch ($_POST['accion']) {
             case 'guardar':
-                $numero = $_POST['numero'];
-                $capacidad = $_POST['capacidad'];
-                $room_id = $_POST['room_id'];
-                $estado = match(strtolower($_POST['estado'])) {
-                    'disponible' => 'free',
-                    'ocupada' => 'occupied',
-                    'reservada' => 'reserved',
-                    default => 'free'
-                };
-                $mesa_id = $_POST['mesa_id'] ?? null;
+                try {
+                    $numero = $_POST['numero'];
+                    $capacidad = $_POST['capacidad'];
+                    $room_id = $_POST['room_id'];
+                    $estado = match(strtolower($_POST['estado'])) {
+                        'disponible' => 'free',
+                        'ocupada' => 'occupied',
+                        'reservada' => 'reserved',
+                        default => 'free'
+                    };
+                    $mesa_id = $_POST['mesa_id'] ?? null;
 
-                if ($mesa_id) {
-                    $stmt = $conexion->prepare("UPDATE tbl_tables SET table_number = ?, capacity = ?, room_id = ?, status = ? WHERE table_id = ?");
-                    $stmt->execute([$numero, $capacidad, $room_id, $estado, $mesa_id]);
-                } else {
-                    $stmt = $conexion->prepare("INSERT INTO tbl_tables (table_number, capacity, room_id, status) VALUES (?, ?, ?, ?)");
-                    $stmt->execute([$numero, $capacidad, $room_id, $estado]);
+                    // Verificar si ya existe una mesa con ese número en la misma sala
+                    $stmt = $conexion->prepare("SELECT COUNT(*) FROM tbl_tables WHERE table_number = ? AND room_id = ? AND table_id != ?");
+                    $stmt->execute([$numero, $room_id, $mesa_id ?? 0]);
+                    if ($stmt->fetchColumn() > 0) {
+                        throw new Exception("Ya existe una mesa con ese número en esta sala");
+                    }
+
+                    if ($mesa_id) {
+                        $stmt = $conexion->prepare("UPDATE tbl_tables SET table_number = ?, capacity = ?, room_id = ?, status = ? WHERE table_id = ?");
+                        $stmt->execute([$numero, $capacidad, $room_id, $estado, $mesa_id]);
+                    } else {
+                        $stmt = $conexion->prepare("INSERT INTO tbl_tables (table_number, capacity, room_id, status) VALUES (?, ?, ?, ?)");
+                        $stmt->execute([$numero, $capacidad, $room_id, $estado]);
+                    }
+                    echo "<script>window.location.href = '?seccion=mesas';</script>";
+                    exit;
+                } catch (Exception $e) {
+                    echo '<div class="alert alert-danger">' . $e->getMessage() . '</div>';
                 }
-                echo "<script>window.location.href = '?seccion=mesas';</script>";
-                exit;
                 break;
 
             case 'eliminar':
@@ -200,11 +211,10 @@ $stmt->execute($params);
                         <div class="d-flex gap-2">
                             <a href="?seccion=mesas&accion=editar&id=<?php echo $mesa['table_id']; ?>" 
                                class="btn btn-sm btn-primary">Editar</a>
-                            <form method="POST" class="m-0">
+                            <form method="POST" class="m-0 form-eliminar" data-tipo="mesa">
                                 <input type="hidden" name="accion" value="eliminar">
                                 <input type="hidden" name="mesa_id" value="<?php echo $mesa['table_id']; ?>">
-                                <button type="submit" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('¿Estás seguro de eliminar esta mesa?')">
+                                <button type="submit" class="btn btn-sm btn-danger">
                                     Eliminar
                                 </button>
                             </form>

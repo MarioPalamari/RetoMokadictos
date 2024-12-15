@@ -48,30 +48,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['accion'])) {
         switch ($_POST['accion']) {
             case 'guardar':
-                $mesa_id = $_POST['mesa_id'];
-                $user_id = $_SESSION['user_id']; // Asumiendo que tenemos el ID del usuario en sesión
-                $fecha = $_POST['fecha'];
-                $hora_inicio = $_POST['hora'];
-                $hora_fin = $_POST['hora_fin'];
-                $estado = 'pending'; // Valor por defecto
-                $reserva_id = $_POST['reserva_id'] ?? null;
+                try {
+                    $mesa_id = $_POST['mesa_id'];
+                    $user_id = $_SESSION['user_id'];
+                    $fecha = $_POST['fecha'];
+                    $hora_inicio = $_POST['hora'];
+                    $hora_fin = $_POST['hora_fin'];
+                    $estado = 'pending';
+                    $reserva_id = $_POST['reserva_id'] ?? null;
 
-                if ($reserva_id) {
-                    $stmt = $conexion->prepare("UPDATE tbl_reservations SET 
-                        table_id = ?, user_id = ?, reservation_date = ?, 
-                        start_time = ?, end_time = ?, status = ? 
-                        WHERE reservation_id = ?");
-                    $stmt->execute([$mesa_id, $user_id, $fecha, 
-                                  $hora_inicio, $hora_fin, $estado, $reserva_id]);
-                } else {
-                    $stmt = $conexion->prepare("INSERT INTO tbl_reservations 
-                        (table_id, user_id, reservation_date, start_time, end_time, status) 
-                        VALUES (?, ?, ?, ?, ?, ?)");
-                    $stmt->execute([$mesa_id, $user_id, $fecha, 
-                                  $hora_inicio, $hora_fin, $estado]);
+                    // Verificar si la mesa está disponible en ese horario
+                    $stmt = $conexion->prepare("
+                        SELECT COUNT(*) FROM tbl_reservations 
+                        WHERE table_id = ? 
+                        AND reservation_date = ? 
+                        AND ((start_time <= ? AND end_time >= ?) 
+                        OR (start_time <= ? AND end_time >= ?))
+                        AND reservation_id != ?
+                    ");
+                    $stmt->execute([$mesa_id, $fecha, $hora_inicio, $hora_inicio, $hora_fin, $hora_fin, $reserva_id ?? 0]);
+                    if ($stmt->fetchColumn() > 0) {
+                        throw new Exception("La mesa ya está reservada en ese horario");
+                    }
+
+                    if ($reserva_id) {
+                        $stmt = $conexion->prepare("UPDATE tbl_reservations SET 
+                            table_id = ?, user_id = ?, reservation_date = ?, 
+                            start_time = ?, end_time = ?, status = ? 
+                            WHERE reservation_id = ?");
+                        $stmt->execute([$mesa_id, $user_id, $fecha, 
+                                      $hora_inicio, $hora_fin, $estado, $reserva_id]);
+                    } else {
+                        $stmt = $conexion->prepare("INSERT INTO tbl_reservations 
+                            (table_id, user_id, reservation_date, start_time, end_time, status) 
+                            VALUES (?, ?, ?, ?, ?, ?)");
+                        $stmt->execute([$mesa_id, $user_id, $fecha, 
+                                      $hora_inicio, $hora_fin, $estado]);
+                    }
+                    echo "<script>window.location.href = '?seccion=reservas';</script>";
+                    exit;
+                } catch (Exception $e) {
+                    echo '<div class="alert alert-danger">' . $e->getMessage() . '</div>';
                 }
-                echo "<script>window.location.href = '?seccion=reservas';</script>";
-                exit;
                 break;
 
             case 'eliminar':
@@ -212,11 +230,10 @@ $stmt->execute($params);
                         <div class="d-flex gap-2">
                             <a href="?seccion=reservas&accion=editar&id=<?php echo $reserva['reservation_id']; ?>" 
                                class="btn btn-sm btn-primary">Editar</a>
-                            <form method="POST" class="m-0">
+                            <form method="POST" class="m-0 form-eliminar" data-tipo="reserva">
                                 <input type="hidden" name="accion" value="eliminar">
                                 <input type="hidden" name="reserva_id" value="<?php echo $reserva['reservation_id']; ?>">
-                                <button type="submit" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('¿Estás seguro de eliminar esta reserva?')">
+                                <button type="submit" class="btn btn-sm btn-danger">
                                     Eliminar
                                 </button>
                             </form>

@@ -43,29 +43,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['accion'])) {
         switch ($_POST['accion']) {
             case 'guardar':
-                $username = $_POST['username'];
-                $nombre = $_POST['nombre'];
-                $apellidos = $_POST['apellidos'];
-                $role_id = $_POST['role_id'];
-                $user_id = $_POST['user_id'] ?? null;
-                $password = $_POST['password'] ?? null;
+                try {
+                    $username = $_POST['username'];
+                    $nombre = $_POST['nombre'];
+                    $apellidos = $_POST['apellidos'];
+                    $role_id = $_POST['role_id'];
+                    $user_id = $_POST['user_id'] ?? null;
+                    $password = $_POST['password'] ?? null;
 
-                if ($user_id) {
-                    // Actualizar usuario existente
-                    if (!empty($password)) {
-                        $stmt = $conexion->prepare("UPDATE tbl_users SET username = ?, nombre = ?, apellidos = ?, role_id = ?, pwd = ? WHERE user_id = ?");
-                        $stmt->execute([$username, $nombre, $apellidos, $role_id, password_hash($password, PASSWORD_DEFAULT), $user_id]);
-                    } else {
-                        $stmt = $conexion->prepare("UPDATE tbl_users SET username = ?, nombre = ?, apellidos = ?, role_id = ? WHERE user_id = ?");
-                        $stmt->execute([$username, $nombre, $apellidos, $role_id, $user_id]);
+                    // Verificar si el usuario ya existe
+                    $stmt = $conexion->prepare("SELECT COUNT(*) FROM tbl_users WHERE username = ? AND user_id != ?");
+                    $stmt->execute([$username, $user_id ?? 0]);
+                    if ($stmt->fetchColumn() > 0) {
+                        throw new Exception("El nombre de usuario ya existe");
                     }
-                } else {
-                    // Insertar nuevo usuario
-                    $stmt = $conexion->prepare("INSERT INTO tbl_users (username, nombre, apellidos, role_id, pwd) VALUES (?, ?, ?, ?, ?)");
-                    $stmt->execute([$username, $nombre, $apellidos, $role_id, password_hash($password, PASSWORD_DEFAULT)]);
+
+                    if ($user_id) {
+                        if (!empty($password)) {
+                            $stmt = $conexion->prepare("UPDATE tbl_users SET username = ?, nombre = ?, apellidos = ?, role_id = ?, pwd = ? WHERE user_id = ?");
+                            $stmt->execute([$username, $nombre, $apellidos, $role_id, password_hash($password, PASSWORD_DEFAULT), $user_id]);
+                        } else {
+                            $stmt = $conexion->prepare("UPDATE tbl_users SET username = ?, nombre = ?, apellidos = ?, role_id = ? WHERE user_id = ?");
+                            $stmt->execute([$username, $nombre, $apellidos, $role_id, $user_id]);
+                        }
+                    } else {
+                        $stmt = $conexion->prepare("INSERT INTO tbl_users (username, nombre, apellidos, role_id, pwd) VALUES (?, ?, ?, ?, ?)");
+                        $stmt->execute([$username, $nombre, $apellidos, $role_id, password_hash($password, PASSWORD_DEFAULT)]);
+                    }
+                    echo "<script>window.location.href = '?seccion=usuarios';</script>";
+                    exit;
+                } catch (Exception $e) {
+                    echo '<div class="alert alert-danger">' . $e->getMessage() . '</div>';
                 }
-                echo "<script>window.location.href = '?seccion=usuarios';</script>";
-                exit;
                 break;
 
             case 'eliminar':
@@ -197,11 +206,10 @@ $stmt->execute($params);
                         <div class="d-flex gap-2">
                             <a href="?seccion=usuarios&accion=editar&id=<?php echo $usuario['user_id']; ?>" 
                                class="btn btn-sm btn-primary">Editar</a>
-                            <form method="POST" class="m-0">
+                            <form method="POST" class="m-0 form-eliminar" data-tipo="usuario">
                                 <input type="hidden" name="accion" value="eliminar">
                                 <input type="hidden" name="user_id" value="<?php echo $usuario['user_id']; ?>">
-                                <button type="submit" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('¿Estás seguro de eliminar este usuario?')">
+                                <button type="submit" class="btn btn-sm btn-danger">
                                     Eliminar
                                 </button>
                             </form>

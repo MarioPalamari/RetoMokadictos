@@ -8,20 +8,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['accion'])) {
         switch ($_POST['accion']) {
             case 'guardar':
-                $nombre = $_POST['nombre'];
-                $capacidad = $_POST['capacidad'];
-                $descripcion = $_POST['descripcion'];
-                $id_sala = $_POST['id_sala'] ?? null;
+                try {
+                    $nombre = $_POST['nombre'];
+                    $capacidad = $_POST['capacidad'];
+                    $descripcion = $_POST['descripcion'];
+                    $id_sala = $_POST['id_sala'] ?? null;
 
-                if ($id_sala) {
-                    $stmt = $conexion->prepare("UPDATE tbl_rooms SET name = ?, capacity = ?, description = ? WHERE room_id = ?");
-                    $stmt->execute([$nombre, $capacidad, $descripcion, $id_sala]);
-                } else {
-                    $stmt = $conexion->prepare("INSERT INTO tbl_rooms (name, capacity, description) VALUES (?, ?, ?)");
-                    $stmt->execute([$nombre, $capacidad, $descripcion]);
+                    // Verificar si ya existe una sala con ese nombre
+                    $stmt = $conexion->prepare("SELECT COUNT(*) FROM tbl_rooms WHERE name = ? AND room_id != ?");
+                    $stmt->execute([$nombre, $id_sala ?? 0]);
+                    if ($stmt->fetchColumn() > 0) {
+                        throw new Exception("Ya existe una sala con ese nombre");
+                    }
+
+                    if ($id_sala) {
+                        $stmt = $conexion->prepare("UPDATE tbl_rooms SET name = ?, capacity = ?, description = ? WHERE room_id = ?");
+                        $stmt->execute([$nombre, $capacidad, $descripcion, $id_sala]);
+                    } else {
+                        $stmt = $conexion->prepare("INSERT INTO tbl_rooms (name, capacity, description) VALUES (?, ?, ?)");
+                        $stmt->execute([$nombre, $capacidad, $descripcion]);
+                    }
+                    echo "<script>window.location.href = '?seccion=salas';</script>";
+                    exit;
+                } catch (Exception $e) {
+                    echo '<div class="alert alert-danger">' . $e->getMessage() . '</div>';
                 }
-                echo "<script>window.location.href = '?seccion=salas';</script>";
-                exit;
                 break;
 
             case 'eliminar':
@@ -148,11 +159,10 @@ $stmt->execute($params);
                         <div class="d-flex gap-2">
                             <a href="?seccion=salas&accion=editar&id=<?php echo $sala['room_id']; ?>" 
                                class="btn btn-sm btn-primary">Editar</a>
-                            <form method="POST" class="m-0">
+                            <form method="POST" class="m-0 form-eliminar" data-tipo="sala">
                                 <input type="hidden" name="accion" value="eliminar">
                                 <input type="hidden" name="id_sala" value="<?php echo $sala['room_id']; ?>">
-                                <button type="submit" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('¿Estás seguro de eliminar esta sala?')">
+                                <button type="submit" class="btn btn-sm btn-danger">
                                     Eliminar
                                 </button>
                             </form>
