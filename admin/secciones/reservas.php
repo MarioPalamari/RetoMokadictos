@@ -104,25 +104,25 @@ if (isset($_GET['accion']) && ($_GET['accion'] == 'nueva' || $_GET['accion'] == 
             <div class="col-md-4 mb-3">
                 <label class="form-label">Fecha</label>
                 <input type="date" class="form-control" name="fecha" 
-                       value="<?php echo $reserva ? $reserva['reservation_date'] : ''; ?>" required>
+                       value="<?php echo $reserva ? $reserva['reservation_date'] : ''; ?>">
             </div>
 
             <div class="col-md-4 mb-3">
                 <label class="form-label">Hora de inicio</label>
                 <input type="time" class="form-control" name="hora" 
-                       value="<?php echo $reserva ? $reserva['start_time'] : ''; ?>" required>
+                       value="<?php echo $reserva ? $reserva['start_time'] : ''; ?>">
             </div>
 
             <div class="col-md-4 mb-3">
                 <label class="form-label">Hora de fin</label>
                 <input type="time" class="form-control" name="hora_fin" 
-                       value="<?php echo $reserva ? $reserva['end_time'] : ''; ?>" required>
+                       value="<?php echo $reserva ? $reserva['end_time'] : ''; ?>">
             </div>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Mesa</label>
-            <select class="form-control" name="mesa_id" required>
+            <select class="form-control" name="mesa_id" >
                 <option value="">Seleccione una mesa</option>
                 <?php
                 $mesas = $conexion->query("
@@ -227,3 +227,4 @@ $stmt->execute($params);
         </tbody>
     </table>
 </div> 
+<script src="../js/validarform.js"></script>

@@ -89,7 +89,7 @@ if (isset($_GET['accion'])) {
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
         }
         ?>
-        <form method="POST" class="mb-4">
+        <form method="POST" class="mb-4" id="usuarioForm" novalidate>
             <input type="hidden" name="accion" value="guardar">
             <?php if ($usuario) { ?>
                 <input type="hidden" name="user_id" value="<?php echo $usuario['user_id']; ?>">
@@ -98,24 +98,24 @@ if (isset($_GET['accion'])) {
             <div class="mb-3">
                 <label class="form-label">Usuario</label>
                 <input type="text" class="form-control" name="username" 
-                       value="<?php echo $usuario ? $usuario['username'] : ''; ?>" required>
+                       value="<?php echo $usuario ? $usuario['username'] : ''; ?>">
             </div>
             
             <div class="mb-3">
                 <label class="form-lab">Nombre</label>
                 <input type="text" class="form-control" name="nombre" 
-                       value="<?php echo $usuario ? $usuario['nombre'] : ''; ?>" required>
+                       value="<?php echo $usuario ? $usuario['nombre'] : ''; ?>">
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Apellidos</label>
                 <input type="text" class="form-control" name="apellidos" 
-                       value="<?php echo $usuario ? $usuario['apellidos'] : ''; ?>" required>
+                       value="<?php echo $usuario ? $usuario['apellidos'] : ''; ?>">
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Rol</label>
-                <select class="form-control" name="role_id" required>
+                <select class="form-control" name="role_id" >
                     <?php
                     $roles = $conexion->query("SELECT * FROM tbl_roles ORDER BY role_name");
                     while ($rol = $roles->fetch(PDO::FETCH_ASSOC)) {
@@ -129,7 +129,7 @@ if (isset($_GET['accion'])) {
             <div class="mb-3">
                 <label class="form-label">Contraseña <?php echo $usuario ? '(dejar en blanco para mantener la actual)' : ''; ?></label>
                 <input type="password" class="form-control" name="password" 
-                       <?php echo $usuario ? '' : 'required'; ?>>
+                       <?php echo $usuario ? '' : ''; ?>>
             </div>
             
             <button type="submit" class="btn btn-primary">Guardar</button>
@@ -212,3 +212,7 @@ $stmt->execute($params);
         </tbody>
     </table>
 </div> 
+<script>
+    console.log('usuarios.php cargado'); // Para verificar que llegamos a este punto
+</script>
+<script src="./js/validarform.js"></script>

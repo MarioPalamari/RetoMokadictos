@@ -126,3 +126,4 @@ $stmt->execute($params);
         </tbody>
     </table>
 </div> 
+<script src="../js/validarform.js"></script>

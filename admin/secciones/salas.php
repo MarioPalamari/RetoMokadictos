@@ -53,13 +53,13 @@ if (isset($_GET['accion']) && ($_GET['accion'] == 'nueva' || $_GET['accion'] == 
         <div class="mb-3">
             <label class="form-label">Nombre</label>
             <input type="text" class="form-control" name="nombre" 
-                   value="<?php echo $sala ? $sala['name'] : ''; ?>" required>
+                   value="<?php echo $sala ? $sala['name'] : ''; ?>">
         </div>
         
         <div class="mb-3">
             <label class="form-label">Capacidad</label>
             <input type="number" class="form-control" name="capacidad" 
-                   value="<?php echo $sala ? $sala['capacity'] : ''; ?>" required>
+                   value="<?php echo $sala ? $sala['capacity'] : ''; ?>">
         </div>
         
         <div class="mb-3">
@@ -163,3 +163,4 @@ $stmt->execute($params);
         </tbody>
     </table>
 </div> 
+<script src="../js/validarform.js"></script>
